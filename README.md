@@ -2,11 +2,21 @@
 
 Analyse music locally, create numbered beat markers, and align video edits to the music in Blender's Video Sequencer.
 
+## Download
+
+**Version 0.4.0 · Prerelease · Requires Blender 5.2 or newer**
+
+| [**Download for Mac**](https://github.com/hannah-april-mccall/beat-marker-blender/releases/download/v0.4.0/beat-marker-blender-0.4.0-macos-arm64.zip) | [**Download for Windows**](https://github.com/hannah-april-mccall/beat-marker-blender/releases/download/v0.4.0/beat-marker-blender-0.4.0-windows-x64.zip) | [**Download for Linux**](https://github.com/hannah-april-mccall/beat-marker-blender/releases/download/v0.4.0/beat-marker-blender-0.4.0-linux-x64.zip) |
+| :---: | :---: | :---: |
+| Apple silicon (M-series chips) | Intel or AMD processor (x64) | Intel or AMD processor (x64), Ubuntu 22.04+ or equivalent |
+
+On a Mac, **Apple menu → About This Mac** shows the chip. Intel Macs and Windows/Linux ARM computers are not included in this release. See the [release notes and all downloads](https://github.com/hannah-april-mccall/beat-marker-blender/releases/tag/v0.4.0).
+
 Beat Marker detects beats and bar starts using **Beat This!**, then maps the results to the music strip's source trim and timeline position. Select the beats you want to mark—for example, beats **1 and 3**—and fit your video clips between them.
 
 ## Install
 
-1. Open **[Releases](../../releases)** and download the ZIP for your computer. Use the named Beat Marker package rather than GitHub's automatic **Source code** ZIP.
+1. Download the ZIP for your computer using one of the links above. GitHub's automatic **Source code** archives do not contain the analysis engine.
 2. In Blender, open **Preferences → Get Extensions → menu → Install from Disk**.
 3. Select the downloaded ZIP and enable **Beat Marker**.
 4. In the Video Sequencer, press **N** and open the **Beat Marker** tab.

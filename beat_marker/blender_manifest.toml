@@ -1,0 +1,13 @@
+schema_version = "1.0.0"
+id = "beat_marker"
+version = "0.4.0"
+name = "Beat Marker"
+tagline = "Analyse music locally and refresh numbered beat markers"
+maintainer = "Hannah McCall"
+type = "add-on"
+tags = ["Sequencer"]
+blender_version_min = "5.2.0"
+license = ["SPDX:MIT"]
+
+[permissions]
+files = "Read local audio and manage temporary analysis results"

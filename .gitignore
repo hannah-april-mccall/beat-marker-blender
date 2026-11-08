@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+.build/
+dist/
+*.zip
+*.blend
+*.blend1
+*.ckpt
+cache/
+jobs/
+config.json

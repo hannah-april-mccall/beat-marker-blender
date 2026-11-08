@@ -1,0 +1,101 @@
+name: Build standalone releases
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', 'README.md', 'CHANGELOG.md']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standalone-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {target: macos-arm64, os: macos-15, torch: '2.6.0'}
+          - {target: windows-x64, os: windows-2022, torch: '2.6.0'}
+          - {target: linux-x64, os: ubuntu-22.04, torch: '2.6.0'}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install analysis and build packages
+        shell: bash
+        run: |
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            python -m pip install --only-binary=:all: "torch==${{ matrix.torch }}" "torchaudio==${{ matrix.torch }}"
+          else
+            python -m pip install --only-binary=:all: --index-url https://download.pytorch.org/whl/cpu "torch==${{ matrix.torch }}" "torchaudio==${{ matrix.torch }}"
+          fi
+          python -m pip install --only-binary=:all: -r engine/requirements.txt pyinstaller==6.16.0
+      - name: Fetch verified public model and FFmpeg source
+        run: python scripts/fetch_assets.py
+      - name: Set up native Windows toolchain
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: make diffutils mingw-w64-ucrt-x86_64-gcc
+      - name: Build portable FFmpeg tools on Windows
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: bash scripts/build_ffmpeg.sh
+      - name: Build portable FFmpeg tools on Mac/Linux
+        if: runner.os != 'Windows'
+        shell: bash
+        run: bash scripts/build_ffmpeg.sh
+      - name: Check runtime integration helpers
+        run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Freeze, relocate, test and package the engine
+        run: python scripts/build.py
+      - name: Run Blender marker, alignment and bundled-engine checks
+        run: python scripts/run_blender_tests.py
+      - name: Save Blender verification receipts
+        shell: bash
+        run: |
+          cp .build/integration/markers-verification.json "dist/markers-${{ matrix.target }}.json"
+          cp .build/integration/alignment-verification.json "dist/alignment-${{ matrix.target }}.json"
+          cp .build/integration/engine-verification.json "dist/engine-${{ matrix.target }}.json"
+      - name: Save native dependency inventory
+        shell: bash
+        run: python -m pip freeze > "dist/dependencies-${{ matrix.target }}.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: dist/*
+          retention-days: 7
+          if-no-files-found: error
+  release:
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Publish tested prerelease packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          VERSION=$(python -c 'import tomllib; print(tomllib.load(open("beat_marker/blender_manifest.toml", "rb"))["version"])')
+          gh release view "v$VERSION" >/dev/null 2>&1 || gh release create "v$VERSION" --target "$GITHUB_SHA" --prerelease --title "Beat Marker $VERSION" --notes-file docs/RELEASE_NOTES.md
+          gh release upload "v$VERSION" release-assets/* --clobber

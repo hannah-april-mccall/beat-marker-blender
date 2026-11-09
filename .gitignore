@@ -11,3 +11,14 @@ dist/
 cache/
 jobs/
 config.json
+.private/
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.key
+*.pem
+*.log
+*.prproj
+*.prlock

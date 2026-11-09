@@ -3,8 +3,7 @@ name: Build standalone releases
 on:
   workflow_dispatch:
   push:
-    branches: [main]
-    paths-ignore: ['docs/**', 'README.md', 'CHANGELOG.md']
+    tags: ['v*']
 
 permissions:
   contents: read
@@ -97,5 +96,13 @@ jobs:
         shell: bash
         run: |
           VERSION=$(python -c 'import tomllib; print(tomllib.load(open("beat_marker/blender_manifest.toml", "rb"))["version"])')
-          gh release view "v$VERSION" >/dev/null 2>&1 || gh release create "v$VERSION" --target "$GITHUB_SHA" --prerelease --title "Beat Marker $VERSION" --notes-file docs/RELEASE_NOTES.md
-          gh release upload "v$VERSION" release-assets/* --clobber
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "v$VERSION" ]]; then
+            echo "Tag must match the version in blender_manifest.toml."
+            exit 1
+          fi
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "This version is already published. Bump the manifest version to publish a new build."
+            exit 1
+          fi
+          gh release create "v$VERSION" --target "$GITHUB_SHA" --prerelease --title "Beat Marker $VERSION" --notes-file docs/RELEASE_NOTES.md
+          gh release upload "v$VERSION" release-assets/*

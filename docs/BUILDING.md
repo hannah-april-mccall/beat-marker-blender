@@ -51,6 +51,6 @@ The add-on stores caches in `bpy.utils.extension_path_user(__package__)`, outsid
 
 ## Releasing
 
-The release workflow builds the platform packages, runs their checks and attaches successful packages to a prerelease tagged with the manifest version. The repository visibility controls who can access those releases. The workflow uses the repository-scoped GitHub Actions token; no personal access token is stored.
+The release workflow runs for an explicit version tag or a manual dispatch. It builds the platform packages, runs their checks and attaches successful packages to a prerelease tagged with the manifest version. A pushed tag must match that version. Publishing refuses an existing release; bump the manifest version for a new build instead of replacing earlier downloads. Ordinary source or documentation pushes do not republish packages. The repository visibility controls who can access those releases. The workflow uses the repository-scoped GitHub Actions token; no personal access token is stored.
 
 Keep large generated binaries/models out of Git history. Public build inputs are checksum-verified. Changing dependency versions requires a fresh frozen-engine and Blender integration check.

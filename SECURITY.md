@@ -6,4 +6,4 @@ Please report security problems privately using **Security → Advisories → Re
 
 This is a community project with best-effort support and no guaranteed response time. Fixes target the latest prerelease; older builds may require an update.
 
-Download packages from this repository's Releases page and compare the provided SHA-256 checksums when needed. Current builds have no paid OS publisher signing or Apple notarisation; read the installation guide for unrecognised-publisher warnings and managed-computer limits. A specific malware alert is different from a missing-publisher warning.
+Download packages from this repository's Releases page and compare the provided SHA-256 checksums when needed. Current builds have no paid OS publisher signing or Apple notarisation; read the [installation guide](docs/INSTALLATION.md) for unrecognised-publisher warnings and managed-computer limits. A specific malware alert is different from a missing-publisher warning.

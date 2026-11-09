@@ -25,6 +25,8 @@ The release packages include the background analysis engine, trained model, priv
 
 Blender **5.2 or newer** is required. Platform-specific packages are built for Apple silicon Macs, Windows x64 and Linux x64. Blender 5.2 has no official Intel Mac distribution, so an Intel Mac package is not included. The build workflow runs the frozen-engine and background Blender checks on each platform. See [building and compatibility](docs/BUILDING.md).
 
+**Prerelease:** save a copy of your project before applying alignment. Beat detection is an estimate; review the preview and listen to the result. Support is best-effort. Read the [installation and security-warning guide](docs/INSTALLATION.md) and [platform verification details](docs/TESTING.md).
+
 ## Create beat markers
 
 1. Select one music sound strip.
@@ -62,8 +64,12 @@ The add-on is in `beat_marker/`; the background worker and musical recovery code
 
 Bug reports should include the Beat Marker version, Blender version, operating system and the smallest reproducible example. Do not upload music or footage you do not have permission to share.
 
+## Help and reports
+
+Use the bug-report template in **Issues** and include your versions, package filename and a small reproducible example. Share only media you have permission to distribute and remove personal information from logs. See [SECURITY.md](SECURITY.md) for security reports.
+
 ## Credits and licence
 
 Beat Marker source: **MIT**, copyright Hannah McCall. Beat detection: [Beat This!](https://github.com/CPJKU/beat_this), MIT, Institute of Computational Perception, JKU Linz. Bundled Python packages retain their original licences. The FFmpeg build is LGPL and includes its corresponding source and build configuration. See [third-party notices](THIRD_PARTY_NOTICES.md).
 
-This GitHub release is independent of Blender's official Extensions Platform.
+The MIT licence permits reuse, modification and redistribution, including commercial reuse, while retaining its notice. MIT is GPL-compatible. This GitHub release is independent of Blender's official Extensions Platform, whose add-on licence and packaging rules require a separate review before submission. It is not endorsed by the Blender Foundation.

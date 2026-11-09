@@ -34,4 +34,4 @@ Use the x64 package on a glibc 2.35+ system. The add-on can prepare a runnable c
 
 Use Blender's extension controls to remove or replace the add-on, then install the newer matching ZIP. Save a project copy before testing an update. Analysis data is stored in Blender's extension user-data directory, separately from the installed code. No packages are installed into Blender's Python environment.
 
-Read the README for marker refresh and alignment limits, and TESTING.md for the checks performed on each platform. Support is best-effort; use the repository's bug-report template and remove personal information from any logs or screenshots.
+Read the [README](../README.md) for marker refresh and alignment limits, and [TESTING.md](TESTING.md) for the checks performed on each platform. Support is best-effort; use the repository's bug-report template and remove personal information from any logs or screenshots.
